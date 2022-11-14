@@ -1,8 +1,15 @@
 #include "Simulation.h"
+#include <vector>
 
 Simulation::Simulation(Graph graph, vector<Agent> agents) : mGraph(graph), mAgents(agents) 
 {
     // You can change the implementation of the constructor, but not the signature!
+    vector<Coalition> mCoalitions;
+    for (Agent agent : mAgents)
+    {
+        int PartyMandates = mGraph.getMandates(agent.getPartyId());
+        mCoalitions.push_back(Coalition(agent.getId(), PartyMandates));
+    }
 }
 
 void Simulation::step()
@@ -13,6 +20,15 @@ void Simulation::step()
 bool Simulation::shouldTerminate() const
 {
     // TODO implement this method
+    for (Coalition coalition : getCoalitions())
+    {
+
+    }
+
+    for (Party vertice : mGraph.getVertices())
+    {
+        if (vertice.getState() != Joined) {return false;}
+    }
     return true;
 }
 
@@ -37,4 +53,10 @@ const vector<vector<int>> Simulation::getPartiesByCoalitions() const
 {
     // TODO: you MUST implement this method for getting proper output, read the documentation above.
     return vector<vector<int>>();
+}
+
+
+vector<Coalition> &Simulation::getCoalitions() const
+{
+    return mCoalitions;
 }
