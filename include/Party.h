@@ -1,7 +1,9 @@
 #pragma once
 #include <string>
+#include <stack>
 
 using std::string;
+using std::stack;
 
 class JoinPolicy;
 class Simulation;
@@ -23,6 +25,7 @@ public:
     int getMandates() const;
     void step(Simulation &s);
     const string &getName() const;
+    void addOffer(Coalition coalition);
 
 private:
     int mId;
@@ -31,4 +34,5 @@ private:
     JoinPolicy *mJoinPolicy;
     State mState;
     int mTimer;
+    stack offerCoalitions;
 };

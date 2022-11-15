@@ -15,14 +15,23 @@ Simulation::Simulation(Graph graph, vector<Agent> agents) : mGraph(graph), mAgen
 
 void Simulation::step()
 {
-    
+    for (int i = 0; i <= mGraph.getNumVertices(); i++)
+    {
+        Party party = getParty(i);
+        party.step(*this);
+    }
+
+    for (Agent agent : mAgents)
+    {
+        agent.step(*this);
+    }
 }
 
 bool Simulation::shouldTerminate() const
 {
     for (int i = 0; i <= mGraph.getNumVertices(); i++)
     {
-        if (mGraph.getParty(i).getState() != Joined) {return false;}
+        if (getParty(i).getState() != Joined) {return false;}
     }
 
     for (Coalition coalition : mCoalitions)

@@ -1,30 +1,22 @@
 #pragma once
 
-#include "Coalition.h"
-#include <vector>
+#include <stack>
 
-using std::vector;
+using std::stack;
 
-class JoinPolicy
-{
-public:
-    JoinPolicy(vector<Coalition> coalitions); 
 
-private:
-    vector<Coalition> mCoalitions;
-};
+class JoinPolicy {};
 
 class MandatesJoinPolicy : public JoinPolicy
 {
 public:
     MandatesJoinPolicy();
-    void join();
-
+    void join(stack<Coalition> coalitions);
 };
 
 class LastOfferJoinPolicy : public JoinPolicy 
 {
 public:
     LastOfferJoinPolicy();
-    void join();
+    void join(stack<Coalition> coalitions);
 };
