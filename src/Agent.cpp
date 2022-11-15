@@ -17,5 +17,6 @@ int Agent::getPartyId() const
 
 void Agent::step(Simulation &sim)
 {
-    // TODO: implement this method
+    // select a party according to policy
+    // status update - dont offer this party anymore
 }

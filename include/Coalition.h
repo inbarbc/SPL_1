@@ -2,12 +2,13 @@
 
 class Coalition
 {
-    public:
-        Coalition(int agentId,int mandates);
-        int getMandates() const;
-        void setMandates(int mandates);
+public:
+    Coalition(int agentId, int mandates);
+    int getAgentId() const;
+    int getMandates() const;
+    void addMandates();
 
-    private:
-        int mMandates;
-        int mAgentId;
+private:
+    int mAgentId;
+    int mMandates;
 };
