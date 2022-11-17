@@ -1,0 +1,4 @@
+cd 'Desktop/..'
+g++ -o <o filename> <cpp filename>.cpp
+./<o filename>
+
