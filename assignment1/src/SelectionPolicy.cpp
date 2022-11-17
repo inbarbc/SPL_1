@@ -1,6 +1,6 @@
 #include "../include/SelectionPolicy.h"
 
-void MandatesSelectionPolicy::select(const Graph &graph, Agent &agent, vector<Party> &parties)
+virtual void MandatesSelectionPolicy::select(const Graph &graph, Agent &agent, vector<Party> &parties)
 {
     int m = 0;
     bool b = false;
@@ -21,7 +21,7 @@ void MandatesSelectionPolicy::select(const Graph &graph, Agent &agent, vector<Pa
     }
 }
 
-void EdgeWeightSelectionPolicy::select(const Graph &graph, Agent &agent, vector<Party> &parties)
+virtual void EdgeWeightSelectionPolicy::select(const Graph &graph, Agent &agent, vector<Party> &parties)
 {
     int m = 0;
     mSelectedParty = &parties[0];
@@ -35,6 +35,7 @@ void EdgeWeightSelectionPolicy::select(const Graph &graph, Agent &agent, vector<
                 m = graph.getEdgeWeight(agent.getPartyId(),p.getId());
                 mSelectedParty = &p;
             }
-        else {agent.removePartyFromList(p);}
+            else {agent.removePartyFromList(p);}
+        }
     }
 }

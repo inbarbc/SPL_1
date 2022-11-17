@@ -16,11 +16,11 @@ public:
 class MandatesJoinPolicy : public JoinPolicy
 {
 public:
-    void join(vector<int> coalitions, vector<Agent> &agents);
+    virtual void join(vector<int> coalitions, vector<Agent> &agents);
 };
 
 class LastOfferJoinPolicy : public JoinPolicy 
 {
 public:
-    void join(vector<int> coalitions, vector<Agent> &agents);
+    virtual void join(vector<int> coalitions, vector<Agent> &agents);
 };

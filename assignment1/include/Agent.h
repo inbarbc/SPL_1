@@ -5,6 +5,7 @@
 #include "Simulation.h"
 #include "SelectionPolicy.h"
 
+class Simulation;
 class SelectionPolicy;
 
 class Agent

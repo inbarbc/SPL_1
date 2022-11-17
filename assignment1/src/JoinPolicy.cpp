@@ -1,6 +1,6 @@
 #include "../include/JoinPolicy.h"
 
-void MandatesJoinPolicy::join(vector<int> coalitions, vector<Agent> &agents)
+virtual void MandatesJoinPolicy::join(vector<int> coalitions, vector<Agent> &agents)
 {
     int m = 0;
     mSelectedAgent = &agents[0];
@@ -15,7 +15,7 @@ void MandatesJoinPolicy::join(vector<int> coalitions, vector<Agent> &agents)
     }
 }
 
-void LastOfferJoinPolicy::join(vector<int> coalitions, vector<Agent> &agents)
+virtual void LastOfferJoinPolicy::join(vector<int> coalitions, vector<Agent> &agents)
 {
     mSelectedAgent = &agents[agents.size() - 1];
 }
