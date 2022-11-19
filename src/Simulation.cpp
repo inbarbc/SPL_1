@@ -72,3 +72,4 @@ void Simulation::addAgentToList(Agent &agent)
 {
     mAgents.push_back(agent);
 }
+

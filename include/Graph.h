@@ -5,8 +5,6 @@
 
 using std::vector;
 
-class Party;
-
 class Graph
 {
 public:
@@ -16,8 +14,10 @@ public:
     int getEdgeWeight(int v1, int v2) const;
     int getNumVertices() const;
     const Party &getParty(int partyId) const;
+    Party &getParty(int partyId);
 
-    vector<Party> &getParties(); // מחזיר הפנייה לוקטור המפלגות
+    const vector<Party> &getParties() const;
+    vector<Party> &getParties(); // return a pointer to vector parties
 
 private:
     vector<Party> mVertices;

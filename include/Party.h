@@ -8,6 +8,8 @@
 using std::string;
 using std::vector;
 
+class Simulation;
+
 enum State
 {
     Waiting,
@@ -26,11 +28,17 @@ public:
     void step(Simulation &s);
     const string &getName() const;
 
-    const vector<Agent> &getAgents() const;  // מחזיר הפנייה לוקטור הסוכנים שהציעו למפלגה זו
+    const vector<Agent> &getAgents() const;  // return a pointer to a vector of agents who offer this party to join them
     void addAgentToList(const Agent &agent);
     const int getId() const;
     const bool offerChecking(const int coalitionsId) const;
     void offerMarking (const int coalitionsId);
+
+    virtual ~ Party(); //destructor
+    Party(const Party &other); //copy constructor
+    Party &operator=(const Party &other); //copy assignment operator
+    Party(Party &&other); //move constructor
+    Party &operator=(Party && other); //move assignment operator
 
 private:
     int mId;
