@@ -1,4 +1,5 @@
 #include "Agent.h"
+#include "SelectionPolicy.h"
 #include "Simulation.h"
 
 Agent::Agent(int agentId, int partyId, SelectionPolicy *selectionPolicy) : mAgentId(agentId), mPartyId(partyId), mSelectionPolicy(selectionPolicy)
@@ -16,33 +17,28 @@ int Agent::getPartyId() const
     return mPartyId;
 }
 
-SelectionPolicy *Agent::getSelectionPolicy() const
-{
-    return mSelectionPolicy;
-}
-
-const vector<Party> &Agent::getParties() const
+const vector<int> &Agent::getParties() const
 {
     return mParties;
 }
 
-void Agent::addPartyToList(const Party &party)
+void Agent::addParty(int partyId)
 {
-    mParties.push_back(party);
+    mParties.push_back(partyId);
 }
 
-void Agent::removePartyFromList(const Party &party)
+void Agent::removeParty(int partyId)
 {
-    int index = 0;
+    int i = 0;
 
-    for (const Party &p : mParties)
+    for (int pId : mParties)
     {
-        if (p.getId() == party.getId())
+        if (pId == partyId)
         {
-            mParties.erase(mParties.begin() + index);
+            mParties.erase(mParties.begin() + i);
             break;
         }
-        else {index++;}              
+        else {i++;}              
     }
 }
 
@@ -58,17 +54,6 @@ void Agent::setCoalitionId(int coalitionId)
 
 void Agent::step(Simulation &sim)
 {   
-    mSelectionPolicy->select(sim.getGraph(),*this,mParties);
-    Party &party = *mSelectionPolicy->mSelectedParty;
-
-    // update coalition
-    party.offerMarking(mCoalitionId);
-
-    // update party
-    if (party.getState() == Waiting) {party.setState(CollectingOffers);}
-    party.addAgentToList(*this);
-
-    // update agent
-    removePartyFromList(party);
-    // if (mParties.empty()) {sim.removeAgentFromList(*this);}
+    (*mSelectionPolicy).select(sim.getGraph(),*this,mParties);
+    if (mParties.empty()) {sim.removeAgent(*this);}
 }

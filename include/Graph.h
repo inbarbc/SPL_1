@@ -14,10 +14,8 @@ public:
     int getEdgeWeight(int v1, int v2) const;
     int getNumVertices() const;
     const Party &getParty(int partyId) const;
-    Party &getParty(int partyId);
 
-    const vector<Party> &getParties() const;
-    vector<Party> &getParties(); // return a pointer to vector parties
+    Party &getParty(int partyId);
 
 private:
     vector<Party> mVertices;

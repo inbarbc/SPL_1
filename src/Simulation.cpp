@@ -3,20 +3,20 @@
 Simulation::Simulation(Graph graph, vector<Agent> agents) : mGraph(graph), mAgents(agents) 
 {
     vector<int> coalitions;
-    int id = 0;
+    int i = 0;
 
     for (Agent &agent : mAgents)
     {
-        agent.setCoalitionId(id); id++;
+        agent.setCoalitionId(i); i++;
         coalitions.push_back(mGraph.getMandates(agent.getPartyId()));
     }   
 }
 
 void Simulation::step()
 {
-    for (Party &party : mGraph.getParties())
+    for (int i = 0; i <= mGraph.getNumVertices(); i++)
     {
-        party.step(*this);
+        mGraph.getParty(i).step(*this);
     }
 
     for (Agent &agent : mAgents)
@@ -27,12 +27,14 @@ void Simulation::step()
 
 bool Simulation::shouldTerminate() const
 {
+    if (mAgents.empty()) {return true;}
+    
     for (int i = 0; i <= mGraph.getNumVertices(); i++)
     {
         if (mGraph.getParty(i).getState() != Joined) {return false;}
     }
 
-    for (int coalition : mCoalitions)
+    for (const int coalition : mCoalitions)
     {
         if (coalition >= 61) {return true;}
     }
@@ -63,13 +65,37 @@ const vector<vector<int>> Simulation::getPartiesByCoalitions() const
     return vector<vector<int>>();
 }
 
+Graph &Simulation::getGraph()
+{
+    return mGraph;
+}
+
 vector<int> &Simulation::getCoalitions()
 {
     return mCoalitions;
 }
 
-void Simulation::addAgentToList(Agent &agent)
+void Simulation::addAgent(Agent &agent)
 {
     mAgents.push_back(agent);
 }
 
+void Simulation::removeAgent(Agent &agent)
+{
+    int i = 0;
+
+    for (Agent &a : mAgents)
+    {
+        if (a.getId() == agent.getId())
+        {
+            mAgents.erase(mAgents.begin() + i);
+            break;
+        }
+        else {i++;}
+    }
+}
+
+vector<Agent> &Simulation::getAgents()
+{
+    return mAgents;
+}

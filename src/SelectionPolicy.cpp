@@ -1,41 +1,57 @@
 #include "../include/SelectionPolicy.h"
 
-void MandatesSelectionPolicy::select(const Graph &graph, Agent &agent, vector<Party> &parties)
+void MandatesSelectionPolicy::select(Graph &graph, Agent &agent, vector<int> &parties)
 {
+    // select party
     int m = 0;
-    bool b = false;
-    mSelectedParty = &parties[0];
-   
-    for (Party &party : parties)
-    {
-        if (!party.offerChecking(agent.getCoalitionId()))
-        {
-            if (party.getMandates() > m)
-            {
-                b = true;
-                m = party.getMandates();
-                mSelectedParty = &party;
-            }
-        }
-        else {agent.removePartyFromList(party);}
-    }
-}
+    mSelectedParty = &graph.getParty(parties[0]);
 
-void EdgeWeightSelectionPolicy::select(const Graph &graph, Agent &agent, vector<Party> &parties)
-{
-    int m = 0;
-    mSelectedParty = &parties[0];
-
-    for (Party &p : parties)
+    for (int party : parties)
     {
+        Party &p = graph.getParty(parties[party]);
         if (!p.offerChecking(agent.getCoalitionId()))
         {
-            if (graph.getEdgeWeight(agent.getPartyId(),p.getId()) > m)
+            if (p.getMandates() > m)
             {
-                m = graph.getEdgeWeight(agent.getPartyId(),p.getId());
+                m = p.getMandates();
                 mSelectedParty = &p;
             }
-        else {agent.removePartyFromList(p);}       
         }
+        else {agent.removeParty(party);}
     }
+    
+    // update party
+    if ((*mSelectedParty).getState() == Waiting) {(*mSelectedParty).setState(CollectingOffers);}
+    (*mSelectedParty).addAgent(agent.getId());
+
+    // update agent
+    agent.removeParty((*mSelectedParty).getId());
+}
+
+void EdgeWeightSelectionPolicy::select(Graph &graph, Agent &agent, vector<int> &parties)
+{
+    // select party
+    int m = 0;
+    mSelectedParty = &graph.getParty(parties[0]);
+
+    for (int party : parties)
+    {
+        Party &p = graph.getParty(parties[party]);
+        if (!p.offerChecking(agent.getCoalitionId()))
+        {
+            if (graph.getEdgeWeight(agent.getPartyId(),party) > m)
+            {
+                m = graph.getEdgeWeight(agent.getPartyId(),party);
+                mSelectedParty = &p;
+            }
+        }
+        else {agent.removeParty(party);}
+    }
+    
+    // update party
+    if ((*mSelectedParty).getState() == Waiting) {(*mSelectedParty).setState(CollectingOffers);}
+    (*mSelectedParty).addAgent(agent.getId());
+
+    // update agent
+    agent.removeParty((*mSelectedParty).getId());
 }

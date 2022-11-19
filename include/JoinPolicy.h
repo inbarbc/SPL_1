@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Agent.h"
+#include "Party.h"
 #include <vector>
 
 using std::vector;
@@ -9,18 +10,19 @@ using std::pair;
 class JoinPolicy 
 {
 public:
+    virtual void join(Party &party, vector<int> &coalitions,vector<Agent> &allAgents, vector<int> &myAgents) = 0; 
+protected:
     Agent *mSelectedAgent; 
-    virtual void join(vector<int> &coalitions, vector<Agent> &agents) = 0; 
 };
 
 class MandatesJoinPolicy : public JoinPolicy
 {
 public:
-    virtual void join(vector<int> &coalitions, vector<Agent> &agents);
+    void join(Party &party, vector<int> &coalitions,vector<Agent> &allAgents, vector<int> &myAgents);
 };
 
 class LastOfferJoinPolicy : public JoinPolicy 
 {
 public:
-    virtual void join(vector<int> &coalitions, vector<Agent> &agents);
+    void join(Party &party, vector<int> &coalitions,vector<Agent> &allAgents, vector<int> &myAgents);
 };

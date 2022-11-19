@@ -1,4 +1,6 @@
 #include "Party.h"
+#include "JoinPolicy.h"
+#include "Simulation.h"
 
 Party::Party(int id, string name, int mandates, JoinPolicy *jp) : mId(id), mName(name), mMandates(mandates), mJoinPolicy(jp), mState(Waiting) 
 {
@@ -25,14 +27,14 @@ const string & Party::getName() const
     return mName;
 }
 
-const vector<Agent> &Party::getAgents() const
+const vector<int> Party::getAgents() const
 {
     return mAgents;
 }
 
-void Party::addAgentToList(const Agent &agent)
+void Party::addAgent(int agentId)
 {
-    mAgents.push_back(agent);
+    mAgents.push_back(agentId);
 }
 
 const int Party::getId() const
@@ -57,59 +59,40 @@ void Party::step(Simulation &s)
         mTimer++;
         if (mTimer == 3)
         {
-            mJoinPolicy->join(s.getCoalitions(),mAgents);
-            Agent &agent = *mJoinPolicy->mSelectedAgent;
-
-            // update coalition
-            s.getCoalitions()[agent.getCoalitionId()] += this->getMandates();
-
-            // update party
-            setState(Joined);
+            (*mJoinPolicy).join(*this,s.getCoalitions(),s.getAgents(),mAgents);
 
             // clone agent
-            Agent *newAgent = new Agent(s.getAgents().size(),mId,agent.getSelectionPolicy());
-            newAgent->setCoalitionId(agent.getCoalitionId());
-
-            const Graph &graph = s.getGraph();
-            for (int i = 0; i <= graph.getNumVertices(); i++)
-            {
-                if (graph.getEdgeWeight(mId,i) > 0)
-                {
-                    Party p = graph.getParty(i);
-                    if ((p.getState() == Waiting) |
-                     ((p.getState() == CollectingOffers) &
-                      (!p.offerChecking(agent.getCoalitionId()))))
-                    {
-                        newAgent->addPartyToList(p);
-                    }
-                }
-            }
-            s.addAgentToList(*newAgent);
+            // עדכון זהות הסוכן
+            // עדכון זהות הקואליציה
+            // מעבר על השכנים של המפלגה וצירוף המפלגות הרלוונטיות לוקטור המפלגות של הסוכן
+            // הוספת הסוכן החדש לוקטור הסוכנים הכללי
         }
     }
 }
 
-
 ///------------Rule of 5-------------///
+
 //--------Destructor--------//
-Party::~Party() {
-    /* if we changed to vector<Agent*> in header file
-    for(Agent* agent:mAgents){
-        delete (agent);
-        agent = nullptr;
-    }
-    */
+Party::~Party()
+{
+    delete mJoinPolicy;
     mAgents.clear();
     mCoalitions.clear();
 }
+
 //---------------- copy constructor-------------//
-Party::Party(const Party &other) {
-    for (Agent agent: other.mAgents) {
+Party::Party(const Party &other)
+{
+    for (int agent: other.mAgents)
+    {
         mAgents.push_back(agent);
     }
-    for (bool coatiltion: other.mCoalitions) {
+
+    for (bool coatiltion: other.mCoalitions)
+    {
         mCoalitions.push_back(coatiltion);
     }
+
     mId = other.mId;
     mName = other.mName;
     mMandates = other.mMandates;
@@ -118,52 +101,53 @@ Party::Party(const Party &other) {
 }
 
 //-------------copy assignment operator------------//
-Party& Party::operator=(const Party& other) {
-    if(this == &other){
+Party& Party::operator=(const Party& other)
+{
+    if(this == &other)
+    {
         return *this;
     }
-    
-    /* if we changed to vector<Agent*> in header file
-    for(Agent* agent:mAgents){
-        if(agent)
-            delete(agent);
-    }
-    */
-    mAgents.clear();
-    mCoalitions.clear();
-    for (Agent agent: other.mAgents) {
-        mAgents.push_back(agent);
-    }
-    for (bool coatiltion: other.mCoalitions) {
-        mCoalitions.push_back(coatiltion);
-    }
-    mId = other.mId;
-    mName = other.mName;
-    mMandates = other.mMandates;
-    mJoinPolicy = other.mJoinPolicy;
-    mState = other.mState;
-    return *this;
-}
+    else
+    {
+        delete mJoinPolicy;
+        mJoinPolicy = nullptr;
+        mJoinPolicy = other.mJoinPolicy;
 
+        mAgents.clear();
+        mCoalitions.clear();
+
+        for (int agent: other.mAgents)
+        {
+            mAgents.push_back(agent);
+        }
+
+        for (bool coatiltion: other.mCoalitions)
+        {
+            mCoalitions.push_back(coatiltion);
+        }   
+
+        mId = other.mId;
+        mName = other.mName;
+        mMandates = other.mMandates;
+        mJoinPolicy = other.mJoinPolicy;
+        mState = other.mState;
+        return *this;
+    }
+}
 
 //-----------------move constructor-----------//
-Party::Party(Party &&other) {
-    
-    /* if we changed to vector<Agent*> in header file
-    for(Agent* agent:mAgents){
-        mAgents.posu_back(agent)
-        agent = nullptr;
-    }
-    */
-
-   // and delete the next 3 lines:
-    for (Agent agent: other.mAgents) {
+Party::Party(Party &&other)
+{
+    for (int agent: other.mAgents)
+    {
         mAgents.push_back(agent);
     }
 
-    for (bool coatiltion: other.mCoalitions) {
+    for (bool coatiltion: other.mCoalitions)
+    {
         mCoalitions.push_back(coatiltion);
     }
+
     mId = other.mId;
     mName = other.mName;
     mMandates = other.mMandates;
@@ -171,37 +155,28 @@ Party::Party(Party &&other) {
     mState = other.mState;
 }
 
-
 //------------- move assignment operator ---------//
-Party& Party::operator=(Party&& other){
-    if(this == &other){
+Party& Party::operator=(Party&& other)
+{
+    if(this == &other)
+    {
         return *this;
     }
-    
-    /* if we changed to vector<Agent*> in header file
-    for(Agent* agent:mAgents){
-        if(agent)
-            delete(agent);
-    }
-    */
+
+    delete mJoinPolicy;
     mAgents.clear();
     mCoalitions.clear();
 
-    /* if we changed to vector<Agent*> in header file
-    for(Agent* agent:mAgents){
-        mAgents.posu_back(agent)
-        agent = nullptr;
-    }
-    */
-
-   // and delete the next 3 lines:
-    for (Agent agent: other.mAgents) {
+    for (int agent: other.mAgents)
+    {
         mAgents.push_back(agent);
     }
 
-    for (bool coatiltion: other.mCoalitions) {
+    for (bool coatiltion: other.mCoalitions)
+    {
         mCoalitions.push_back(coatiltion);
     }
+    
     mId = other.mId;
     mName = other.mName;
     mMandates = other.mMandates;

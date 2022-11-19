@@ -2,13 +2,12 @@
 
 #include <string>
 #include <vector>
-#include "Agent.h"
-#include "JoinPolicy.h"
+
+class Simulation;
+class JoinPolicy;
 
 using std::string;
 using std::vector;
-
-class Simulation;
 
 enum State
 {
@@ -28,11 +27,11 @@ public:
     void step(Simulation &s);
     const string &getName() const;
 
-    const vector<Agent> &getAgents() const;  // return a pointer to a vector of agents who offer this party to join them
-    void addAgentToList(const Agent &agent);
-    const int getId() const;
+    const vector<int> getAgents() const;
+    void addAgent(int agentId);
+    const int getId() const;   
     const bool offerChecking(const int coalitionsId) const;
-    void offerMarking (const int coalitionsId);
+    void offerMarking(const int coalitionsId);
 
     virtual ~ Party(); //destructor
     Party(const Party &other); //copy constructor
@@ -46,8 +45,8 @@ private:
     int mMandates;
     JoinPolicy *mJoinPolicy;
     State mState;
-    
+
     int mTimer;
-    vector<Agent> mAgents;
+    vector<int> mAgents;
     vector<bool> mCoalitions;
 };

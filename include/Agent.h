@@ -1,8 +1,11 @@
 #pragma once
 
 #include <vector>
-#include "Graph.h"
-#include "SelectionPolicy.h"
+
+using std::vector;
+
+class Simulation;
+class SelectionPolicy;
 
 class Agent
 {
@@ -13,10 +16,9 @@ public:
     int getId() const;
     void step(Simulation &);
 
-    const vector<Party> &getParties() const; // מחזיר הפנייה לרשימת המפלגות האפשריות
-    SelectionPolicy *getSelectionPolicy() const; // מחזיר כתובת של אופן הבחירה של הסוכן
-    void addPartyToList(const Party &party); // עבור שכפול סוכן
-    void removePartyFromList(const Party &party); // במקרה בו לא קיימות מפלגות רלוונטיות להציע להן להצטרף לקואליציה
+    const vector<int> &getParties() const;
+    void addParty(int partyId);
+    void removeParty(int partyId);
     const int getCoalitionId() const;
     void setCoalitionId(int coalitionId);
 
@@ -30,7 +32,7 @@ private:
     int mAgentId;
     int mPartyId;
     SelectionPolicy *mSelectionPolicy;
-    
-    vector<Party> mParties;
+
+    vector<int> mParties;
     int mCoalitionId;
 };

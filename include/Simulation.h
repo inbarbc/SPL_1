@@ -3,7 +3,6 @@
 #include <vector>
 #include "Graph.h"
 #include "Agent.h"
-#include "Party.h"
 
 using std::string;
 using std::vector;
@@ -16,18 +15,20 @@ public:
     void step();
     bool shouldTerminate() const;
 
-    const Graph &getGraph() const; // מחזיר הפנייה לגרף שאינו ניתן לשינוי
-    const vector<Agent> &getAgents() const; // מחזיר הפנייה לרשימת הסוכנים הכללית שאינה ניתנת לשינוי
-    const Party &getParty(int partyId) const; // מחזיר הפנייה למפלגה שאינה ניתנת לשינוי
+    const Graph &getGraph() const;
+    const vector<Agent> &getAgents() const;
+    const Party &getParty(int partyId) const;
     const vector<vector<int>> getPartiesByCoalitions() const;
 
-    vector<int> &getCoalitions(); // מחזיר הפנייה לוקטור הקואליציות
-    void addAgentToList(Agent &agent); // מוסיף סוכן לרשימת הסוכנים הכללית - במקרה בו מפלגה מצטרפת לקואליציה
-    // void removeAgentFromList(Agent &agent); // מוחק סוכן מרשימת הסוכנים הכללית - במקרה בו לסוכן אין מפלגות אפשריות להציע להן להצטרף לקואליציה
+    Graph &getGraph();
+    vector<int> &getCoalitions();
+    void addAgent(Agent &agent);
+    void removeAgent(Agent &agent);
+    vector<Agent> &getAgents();
 
 private:
     Graph mGraph;
-    vector<Agent> mAgents; 
+    vector<Agent> mAgents;
 
     vector<int> mCoalitions;
 };
