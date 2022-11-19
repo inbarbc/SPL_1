@@ -1,12 +1,12 @@
 #pragma once
+
 #include <string>
-#include <stack>
+#include <vector>
+#include "Agent.h"
+#include "JoinPolicy.h"
 
 using std::string;
-using std::stack;
-
-class JoinPolicy;
-class Simulation;
+using std::vector;
 
 enum State
 {
@@ -25,7 +25,12 @@ public:
     int getMandates() const;
     void step(Simulation &s);
     const string &getName() const;
-    void addOffer(Coalition coalition);
+
+    const vector<Agent> &getAgents() const;  // מחזיר הפנייה לוקטור הסוכנים שהציעו למפלגה זו
+    void addAgentToList(const Agent &agent);
+    const int getId() const;
+    const bool offerChecking(const int coalitionsId) const;
+    void offerMarking (const int coalitionsId);
 
 private:
     int mId;
@@ -33,6 +38,8 @@ private:
     int mMandates;
     JoinPolicy *mJoinPolicy;
     State mState;
+    
     int mTimer;
-    stack offerCoalitions;
+    vector<Agent> mAgents;
+    vector<bool> mCoalitions;
 };

@@ -1,31 +1,21 @@
-#include "JoinPolicy.h"
-#include "Coalition.h"
+#include "../include/JoinPolicy.h"
 
-JoinPolicy::JoinPolicy() {}
+void MandatesJoinPolicy::join(vector<int> &coalitions, vector<Agent> &agents)
+{
+    int m = 0;
+    mSelectedAgent = &agents[0];
 
-MandatesJoinPolicy::MandatesJoinPolicy():
-{ 
-}
-
-void MandatesJoinPolicy::join(stack<Coalition> coalitions)
-{   
-    int maxMandates = 0;
-    while(!coalitions.empty())
+    for (Agent &agent : agents)
     {
-        Coalition coalition = coalitions.pop();
-        if(maxMandates < coalition.getMandates())
+        if (coalitions[agent.getCoalitionId()] > m)
         {
-            maxMandates = coalition.getMandates();
-            Coalition coalition = coalitions.pop();
+            m = coalitions[agent.getCoalitionId()];
+            mSelectedAgent = &agent;
         }
     }
 }
 
-LastOfferJoinPolicy::LastOfferJoinPolicy():
+void LastOfferJoinPolicy::join(vector<int> &coalitions, vector<Agent> &agents)
 {
-}
-
-void LastOfferJoinPolicy::join(stack<Coalition> coalitions)
-{   
-    Coalition coalition = coalitions.pop();
+    mSelectedAgent = &agents[agents.size() - 1];
 }

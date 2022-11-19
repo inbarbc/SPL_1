@@ -1,27 +1,25 @@
 #include "Simulation.h"
-#include "Coalition.h"
-#include <vector>
 
 Simulation::Simulation(Graph graph, vector<Agent> agents) : mGraph(graph), mAgents(agents) 
 {
-    // You can change the implementation of the constructor, but not the signature!
+    vector<int> coalitions;
+    int id = 0;
 
-    for (Agent agent : mAgents)
+    for (Agent &agent : mAgents)
     {
-        mCoalitions.push_back(Coalition(agent.getId(),mGraph.getMandates(agent.getPartyId())));
-    }
-
+        agent.setCoalitionId(id); id++;
+        coalitions.push_back(mGraph.getMandates(agent.getPartyId()));
+    }   
 }
 
 void Simulation::step()
 {
-    for (int i = 0; i <= mGraph.getNumVertices(); i++)
+    for (Party &party : mGraph.getParties())
     {
-        Party party = getParty(i);
         party.step(*this);
     }
 
-    for (Agent agent : mAgents)
+    for (Agent &agent : mAgents)
     {
         agent.step(*this);
     }
@@ -31,12 +29,12 @@ bool Simulation::shouldTerminate() const
 {
     for (int i = 0; i <= mGraph.getNumVertices(); i++)
     {
-        if (getParty(i).getState() != Joined) {return false;}
+        if (mGraph.getParty(i).getState() != Joined) {return false;}
     }
 
-    for (Coalition coalition : mCoalitions)
+    for (int coalition : mCoalitions)
     {
-        if (coalition.getMandates() >= 61) {return true;}
+        if (coalition >= 61) {return true;}
     }
 
     return true;
@@ -63,4 +61,14 @@ const vector<vector<int>> Simulation::getPartiesByCoalitions() const
 {
     // TODO: you MUST implement this method for getting proper output, read the documentation above.
     return vector<vector<int>>();
+}
+
+vector<int> &Simulation::getCoalitions()
+{
+    return mCoalitions;
+}
+
+void Simulation::addAgentToList(Agent &agent)
+{
+    mAgents.push_back(agent);
 }

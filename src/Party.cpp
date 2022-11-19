@@ -1,9 +1,9 @@
 #include "Party.h"
+#include "Simulation.h"
 
 Party::Party(int id, string name, int mandates, JoinPolicy *jp) : mId(id), mName(name), mMandates(mandates), mJoinPolicy(jp), mState(Waiting) 
 {
-    offerCoalitions = new stack();
-    // You can change the implementation of the constructor, but not the signature!
+
 }
 
 State Party::getState() const
@@ -26,26 +26,66 @@ const string & Party::getName() const
     return mName;
 }
 
-void Party::step(Simulation &s)
+const vector<Agent> &Party::getAgents() const
 {
+    return mAgents;
+}
+
+void Party::addAgentToList(const Agent &agent)
+{
+    mAgents.push_back(agent);
+}
+
+const int Party::getId() const
+{
+    return mId;
+}
+
+const bool Party::offerChecking(const int coalitionsId) const
+{
+    return mCoalitions[coalitionsId];
+}
+
+void Party::offerMarking(const int coalitionsId)
+{
+    mCoalitions[coalitionsId] = true;
+}
+
+void Party::step(Simulation &s)
+{   
     if (getState() == CollectingOffers)
     {
         mTimer++;
         if (mTimer == 3)
         {
-            // update from CollectingOffers to joined
+            mJoinPolicy->join(s.getCoalitions(),mAgents);
+            Agent &agent = *mJoinPolicy->mSelectedAgent;
+
+            // update coalition
+            s.getCoalitions()[agent.getCoalitionId()] += this->getMandates();
+
+            // update party
             setState(Joined);
-            // select a coalition according to policy
-            mJoinPolicy.Join(offerCoalitions);
-            // update the selected coalition
-            // clone the agent
+
+            // clone agent
+            Agent *newAgent = new Agent(s.getAgents().size(),mId,agent.getSelectionPolicy());
+            newAgent->setCoalitionId(agent.getCoalitionId());
+
+            const Graph &graph = s.getGraph();
+            for (int i = 0; i <= graph.getNumVertices(); i++)
+            {
+                if (graph.getEdgeWeight(mId,i) > 0)
+                {
+                    Party p = graph.getParty(i);
+                    if ((p.getState() == Waiting) |
+                     ((p.getState() == CollectingOffers) &
+                      (!p.offerChecking(agent.getCoalitionId()))))
+                    {
+                        newAgent->addPartyToList(p);
+                    }
+                }
+            }
+            s.addAgentToList(*newAgent);
         }
     }
-
-    // else - add an offer to stack offerCoalitions
-}
-
-void Party::addOffer(Coalition coalition)
-{
-    
 }

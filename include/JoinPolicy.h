@@ -1,22 +1,26 @@
 #pragma once
 
-#include <stack>
+#include "Agent.h"
+#include <vector>
 
-using std::stack;
+using std::vector;
+using std::pair;
 
-
-class JoinPolicy {};
+class JoinPolicy 
+{
+public:
+    Agent *mSelectedAgent; 
+    virtual void join(vector<int> &coalitions, vector<Agent> &agents) = 0; 
+};
 
 class MandatesJoinPolicy : public JoinPolicy
 {
 public:
-    MandatesJoinPolicy();
-    void join(stack<Coalition> coalitions);
+    virtual void join(vector<int> &coalitions, vector<Agent> &agents);
 };
 
 class LastOfferJoinPolicy : public JoinPolicy 
 {
 public:
-    LastOfferJoinPolicy();
-    void join(stack<Coalition> coalitions);
+    virtual void join(vector<int> &coalitions, vector<Agent> &agents);
 };
