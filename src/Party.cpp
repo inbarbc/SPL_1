@@ -151,34 +151,37 @@ Party::Party(Party &&other)
     mMandates = other.mMandates;
     mJoinPolicy = other.mJoinPolicy;
     mState = other.mState;
+    mTimer = other.mTimer;
 }
 
 //------------- move assignment operator ---------//
-Party& Party::operator=(Party&& other)
+Party &Party::operator=(Party &&other)
 {
-    if(this == &other)
+    if(this == &other) {return *this;}
+    else
     {
+        delete mJoinPolicy;
+        other.mJoinPolicy = nullptr;
+
+        mAgents.clear();
+        mCoalitions.clear();
+
+        for (int agent: other.mAgents)
+        {
+            mAgents.push_back(agent);
+        }
+
+        for (bool coatiltion: other.mCoalitions)
+        {   
+            mCoalitions.push_back(coatiltion);
+        }
+    
+        mId = other.mId;
+        mName = other.mName;
+        mMandates = other.mMandates;
+        mJoinPolicy = other.mJoinPolicy;
+        mState = other.mState;
+        mTimer = other.mTimer;
         return *this;
     }
-
-    delete mJoinPolicy;
-    mAgents.clear();
-    mCoalitions.clear();
-
-    for (int agent: other.mAgents)
-    {
-        mAgents.push_back(agent);
-    }
-
-    for (bool coatiltion: other.mCoalitions)
-    {
-        mCoalitions.push_back(coatiltion);
-    }
-    
-    mId = other.mId;
-    mName = other.mName;
-    mMandates = other.mMandates;
-    mJoinPolicy = other.mJoinPolicy;
-    mState = other.mState;
-    return *this;
 }

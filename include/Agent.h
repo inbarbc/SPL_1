@@ -21,6 +21,7 @@ public:
     void removeParty(int partyId);
     const int getCoalitionId() const;
     void setCoalitionId(int coalitionId);
+    void setAgentId(int agentId);
 
     virtual ~ Agent(); //destructor
     Agent(const Agent &other); //copy constructor

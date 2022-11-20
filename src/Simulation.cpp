@@ -8,6 +8,17 @@ Simulation::Simulation(Graph graph, vector<Agent> agents) : mGraph(graph), mAgen
     for (Agent &agent : mAgents)
     {
         agent.setCoalitionId(i); i++;
+
+        for (int j = 0; j <= mGraph.getNumVertices(); j++)
+        {
+            if (mGraph.getEdgeWeight(agent.getId(),j) > 0)
+            {
+                if (mGraph.getParty(j).getState() != Joined) 
+                {
+                    agent.addParty(mGraph.getParty(j).getId());
+                }
+            }
+        }
         coalitions.push_back(mGraph.getMandates(agent.getPartyId()));
     }   
 }
@@ -26,9 +37,7 @@ void Simulation::step()
 }
 
 bool Simulation::shouldTerminate() const
-{
-    if (mAgents.empty()) {return true;}
-    
+{   
     for (int i = 0; i <= mGraph.getNumVertices(); i++)
     {
         if (mGraph.getParty(i).getState() != Joined) {return false;}
