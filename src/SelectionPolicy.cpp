@@ -1,5 +1,12 @@
 #include "../include/SelectionPolicy.h"
 
+SelectionPolicy::SelectionPolicy();
+
+MandatesSelectionPolicy::MandatesSelectionPolicy()
+{
+    :SelectionPolicy();
+}
+
 void MandatesSelectionPolicy::select(Graph &graph, Agent &agent, vector<int> &parties)
 {
     // select party
@@ -26,6 +33,11 @@ void MandatesSelectionPolicy::select(Graph &graph, Agent &agent, vector<int> &pa
 
     // update agent
     agent.removeParty((*mSelectedParty).getId());
+}
+
+EdgeWeightSelectionPolicy::EdgeWeightSelectionPolicy()
+{
+    :SelectionPolicy();
 }
 
 void EdgeWeightSelectionPolicy::select(Graph &graph, Agent &agent, vector<int> &parties)
