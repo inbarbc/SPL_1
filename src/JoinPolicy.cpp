@@ -22,8 +22,6 @@ void MandatesJoinPolicy::join(Party &party, vector<int> &coalitions,vector<Agent
     party.setState(Joined);
 
     // clone agent
-    Agent clonedAgent = Agent(*mSelectedAgent);
-
 }
 
 void LastOfferJoinPolicy::join(Party &party, vector<int> &coalitions,vector<Agent> &allAgents, vector<int> &myAgents)
@@ -37,4 +35,5 @@ void LastOfferJoinPolicy::join(Party &party, vector<int> &coalitions,vector<Agen
     party.setState(Joined);
 
     // clone agent
+    allAgents.push_back(*mSelectedAgent);
 }

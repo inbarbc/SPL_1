@@ -4,7 +4,8 @@
 
 Agent::Agent(int agentId, int partyId, SelectionPolicy *selectionPolicy) : mAgentId(agentId), mPartyId(partyId), mSelectionPolicy(selectionPolicy)
 {
-
+    vector<int> mParties(0);
+    mCoalitionId = -1;
 }
 
 int Agent::getId() const

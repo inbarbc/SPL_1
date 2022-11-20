@@ -11,6 +11,7 @@ class SelectionPolicy
 {
 public:
     virtual void select(Graph &graph, Agent &agent, vector<int> &parties) = 0;
+    virtual ~SelectionPolicy();
 protected:
     Party *mSelectedParty;
 };
@@ -18,11 +19,13 @@ protected:
 class MandatesSelectionPolicy: public SelectionPolicy
 { 
 public:
-    void select(Graph &graph, Agent &agent, vector<int> &parties);
+    virtual void select(Graph &graph, Agent &agent, vector<int> &parties);
+    virtual ~MandatesSelectionPolicy();
 };
 
 class EdgeWeightSelectionPolicy: public SelectionPolicy
 {
 public:
-    void select(Graph &graph, Agent &agent, vector<int> &parties);
+    virtual void select(Graph &graph, Agent &agent, vector<int> &parties);
+    virtual ~EdgeWeightSelectionPolicy();
 };
