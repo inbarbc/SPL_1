@@ -1,10 +1,14 @@
 #include "../include/SelectionPolicy.h"
 
+SelectionPolicy::~SelectionPolicy(){}
+
+MandatesSelectionPolicy::~MandatesSelectionPolicy(){}
+
 void MandatesSelectionPolicy::select(Graph &graph, Agent &agent, vector<int> &parties)
 {
     // select party
     int m = 0;
-    mSelectedParty = &graph.getParty(parties[0]);
+    Party mSelectedParty = graph.getParty(parties[0]);
 
     for (int party : parties)
     {
@@ -14,25 +18,27 @@ void MandatesSelectionPolicy::select(Graph &graph, Agent &agent, vector<int> &pa
             if (p.getMandates() > m)
             {
                 m = p.getMandates();
-                mSelectedParty = &p;
+                mSelectedParty = p;
             }
         }
         else {agent.removeParty(party);}
     }
     
     // update party
-    if ((*mSelectedParty).getState() == Waiting) {(*mSelectedParty).setState(CollectingOffers);}
-    (*mSelectedParty).addAgent(agent.getId());
+    if ((mSelectedParty).getState() == Waiting) {(mSelectedParty).setState(CollectingOffers);}
+    (mSelectedParty).addAgent(agent.getId());
 
     // update agent
-    agent.removeParty((*mSelectedParty).getId());
+    agent.removeParty((mSelectedParty).getId());
 }
+
+EdgeWeightSelectionPolicy::~EdgeWeightSelectionPolicy(){}
 
 void EdgeWeightSelectionPolicy::select(Graph &graph, Agent &agent, vector<int> &parties)
 {
     // select party
     int m = 0;
-    mSelectedParty = &graph.getParty(parties[0]);
+    Party mSelectedParty = graph.getParty(parties[0]);
 
     for (int party : parties)
     {
@@ -42,16 +48,16 @@ void EdgeWeightSelectionPolicy::select(Graph &graph, Agent &agent, vector<int> &
             if (graph.getEdgeWeight(agent.getPartyId(),party) > m)
             {
                 m = graph.getEdgeWeight(agent.getPartyId(),party);
-                mSelectedParty = &p;
+                mSelectedParty = p;
             }
         }
         else {agent.removeParty(party);}
     }
     
     // update party
-    if ((*mSelectedParty).getState() == Waiting) {(*mSelectedParty).setState(CollectingOffers);}
-    (*mSelectedParty).addAgent(agent.getId());
+    if ((mSelectedParty).getState() == Waiting) {(mSelectedParty).setState(CollectingOffers);}
+    (mSelectedParty).addAgent(agent.getId());
 
     // update agent
-    agent.removeParty((*mSelectedParty).getId());
+    agent.removeParty((mSelectedParty).getId());
 }

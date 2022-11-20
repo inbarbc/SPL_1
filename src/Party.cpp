@@ -2,9 +2,8 @@
 #include "JoinPolicy.h"
 #include "Simulation.h"
 
-Party::Party(int id, string name, int mandates, JoinPolicy *jp) : mId(id), mName(name), mMandates(mandates), mJoinPolicy(jp), mState(Waiting) 
+Party::Party(int id, string name, int mandates, JoinPolicy *jp) : mId(id), mName(name), mMandates(mandates), mJoinPolicy(jp), mState(Waiting), mTimer(-1), mAgents(0), mCoalitions(0)
 {
-
 }
 
 State Party::getState() const
@@ -81,7 +80,7 @@ Party::~Party()
 }
 
 //---------------- copy constructor-------------//
-Party::Party(const Party &other)
+Party::Party(const Party &other) : mId(other.mId), mName(other.mName), mMandates(other.mMandates), mJoinPolicy(other.mJoinPolicy), mState(other.mState), mTimer(other.mTimer), mAgents(), mCoalitions()
 {
     for (int agent: other.mAgents)
     {
@@ -92,13 +91,6 @@ Party::Party(const Party &other)
     {
         mCoalitions.push_back(coatiltion);
     }
-
-    mId = other.mId;
-    mName = other.mName;
-    mMandates = other.mMandates;
-    mJoinPolicy = other.mJoinPolicy;
-    mState = other.mState;
-    mTimer = other.mTimer;
 }
 
 //-------------copy assignment operator------------//
@@ -134,7 +126,7 @@ Party &Party::operator=(const Party &other)
 }
 
 //-----------------move constructor-----------//
-Party::Party(Party &&other)
+Party::Party(Party &&other) : mId(other.mId), mName(other.mName), mMandates(other.mMandates), mJoinPolicy(other.mJoinPolicy), mState(other.mState), mTimer(other.mTimer), mAgents(), mCoalitions()
 {
     for (int agent: other.mAgents)
     {
@@ -145,12 +137,6 @@ Party::Party(Party &&other)
     {
         mCoalitions.push_back(coatiltion);
     }
-
-    mId = other.mId;
-    mName = other.mName;
-    mMandates = other.mMandates;
-    mJoinPolicy = other.mJoinPolicy;
-    mState = other.mState;
 }
 
 //------------- move assignment operator ---------//

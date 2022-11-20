@@ -12,8 +12,8 @@ class JoinPolicy
 public:
     virtual void join(Party &party, vector<int> &coalitions,vector<Agent> &allAgents, vector<int> &myAgents) = 0; 
     virtual ~JoinPolicy();
-protected:
-    Agent *mSelectedAgent; 
+//protected:
+//    Agent *mSelectedAgent; 
 };
 
 class MandatesJoinPolicy : public JoinPolicy

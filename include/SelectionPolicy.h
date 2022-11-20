@@ -12,8 +12,8 @@ class SelectionPolicy
 public:
     virtual void select(Graph &graph, Agent &agent, vector<int> &parties) = 0;
     virtual ~SelectionPolicy();
-protected:
-    Party *mSelectedParty;
+//protected:
+//    Party *mSelectedParty;
 };
 
 class MandatesSelectionPolicy: public SelectionPolicy

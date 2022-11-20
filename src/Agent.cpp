@@ -2,10 +2,8 @@
 #include "SelectionPolicy.h"
 #include "Simulation.h"
 
-Agent::Agent(int agentId, int partyId, SelectionPolicy *selectionPolicy) : mAgentId(agentId), mPartyId(partyId), mSelectionPolicy(selectionPolicy)
+Agent::Agent(int agentId, int partyId, SelectionPolicy *selectionPolicy) : mAgentId(agentId), mPartyId(partyId), mSelectionPolicy(selectionPolicy), mParties(0), mCoalitionId()
 {
-    vector<int> mParties(0);
-    mCoalitionId = -1;
 }
 
 int Agent::getId() const
@@ -74,17 +72,12 @@ Agent::~Agent()
 }
 
 //---------------- copy constructor-------------//
-Agent::Agent(const Agent &other)
+Agent::Agent(const Agent &other) : mAgentId(other.mAgentId), mPartyId(other.mPartyId), mSelectionPolicy(other.mSelectionPolicy), mParties(), mCoalitionId(other.mCoalitionId)
 {
     for (int party: other.mParties)
     {
         mParties.push_back(party);
     }
-
-    mAgentId = other.mAgentId;
-    mPartyId = other.mPartyId;
-    mSelectionPolicy = other.mSelectionPolicy;
-    mCoalitionId = other.mCoalitionId;
 }
 
 //-------------copy assignment operator------------//
@@ -112,17 +105,12 @@ Agent &Agent::operator=(const Agent &other)
 }
 
 //-----------------move constructor-----------//
-Agent::Agent(Agent &&other)
+Agent::Agent(Agent &&other): mAgentId(other.mAgentId), mPartyId(other.mPartyId), mSelectionPolicy(other.mSelectionPolicy), mParties(), mCoalitionId(other.mCoalitionId)
 {
     for (int party: other.mParties)
     {
         mParties.push_back(party);
-    } 
-
-    mAgentId = other.mAgentId;
-    mPartyId = other.mPartyId;
-    mSelectionPolicy = other.mSelectionPolicy;
-    mCoalitionId = other.mCoalitionId;
+    }
 }
 
 //------------- move assignment operator ---------//
