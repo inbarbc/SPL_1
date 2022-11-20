@@ -4,6 +4,7 @@
 
 Agent::Agent(int agentId, int partyId, SelectionPolicy *selectionPolicy) : mAgentId(agentId), mPartyId(partyId), mSelectionPolicy(selectionPolicy)
 {
+    mCoalitionId = NULL;
 }
 
 int Agent::getId() const
@@ -55,92 +56,4 @@ void Agent::step(Simulation &sim)
 {   
     (*mSelectionPolicy).select(sim.getGraph(),*this,mParties);
     if (mParties.empty()) {sim.removeAgent(*this);}
-}
-
-///------------Rule of 5-------------///
-
-//--------Destructor--------//
-Agent::~Agent()
-{
-    delete mSelectionPolicy;
-    mParties.clear();
-}
-
-//---------------- copy constructor-------------//
-Agent::Agent(const Agent &other)
-{
-    for (int party: other.mParties)
-    {
-        mParties.push_back(party);
-    }
-
-    mAgentId = other.mAgentId;
-    mPartyId = other.mPartyId;
-    mSelectionPolicy = other.mSelectionPolicy;
-    mCoalitionId = other.mCoalitionId;
-}
-
-//-------------copy assignment operator------------//
-Agent& Agent::operator=(const Agent& other)
-{
-    if(this == &other)
-    {
-        return *this;
-    }
-    else
-    {
-        delete mSelectionPolicy;
-        mSelectionPolicy = nullptr;
-        mSelectionPolicy = other.mSelectionPolicy;
-
-        mParties.clear();
-
-        for (int party: other.mParties)
-        {
-            mParties.push_back(party);
-        }
-
-        mAgentId = other.mAgentId;
-        mPartyId = other.mPartyId;
-        mSelectionPolicy = other.mSelectionPolicy;
-        mCoalitionId = other.mCoalitionId;
-        return *this;
-    }
-}
-
-//-----------------move constructor-----------//
-Agent::Agent(Agent &&other)
-{
-    for (int party: other.mParties)
-    {
-        mParties.push_back(party);
-    }
-
-    mAgentId = other.mAgentId;
-    mPartyId = other.mPartyId;
-    mSelectionPolicy = other.mSelectionPolicy;
-    mCoalitionId = other.mCoalitionId;
-}
-
-//------------- move assignment operator ---------//
-Agent& Agent::operator=(Agent&& other)
-{
-    if(this == &other)
-    {
-        return *this;
-    }
-
-    delete mSelectionPolicy;
-    mParties.clear();
-
-    for (int party: other.mParties)
-    {
-        mParties.push_back(party);
-    }
-
-    mAgentId = other.mAgentId;
-    mPartyId = other.mPartyId;
-    mSelectionPolicy = other.mSelectionPolicy;
-    mCoalitionId = other.mCoalitionId;
-    return *this;
 }

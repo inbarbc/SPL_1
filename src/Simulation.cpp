@@ -16,10 +16,7 @@ void Simulation::step()
 {
     for (int i = 0; i <= mGraph.getNumVertices(); i++)
     {
-        if(mGraph.getParty(i).getState() != Joined)
-        {
-            mGraph.getParty(i).step(*this);
-        }
+        mGraph.getParty(i).step(*this);
     }
 
     for (Agent &agent : mAgents)

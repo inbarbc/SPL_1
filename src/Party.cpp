@@ -4,7 +4,7 @@
 
 Party::Party(int id, string name, int mandates, JoinPolicy *jp) : mId(id), mName(name), mMandates(mandates), mJoinPolicy(jp), mState(Waiting) 
 {
-    mTimer = 0;
+
 }
 
 State Party::getState() const
@@ -98,21 +98,18 @@ Party::Party(const Party &other)
     mMandates = other.mMandates;
     mJoinPolicy = other.mJoinPolicy;
     mState = other.mState;
+    mTimer = other.mTimer;
 }
 
 //-------------copy assignment operator------------//
-Party& Party::operator=(const Party& other)
+Party &Party::operator=(const Party &other)
 {
-    if(this == &other)
-    {
-        return *this;
-    }
+    if(this == &other) {return *this;}
     else
     {
         delete mJoinPolicy;
         mJoinPolicy = nullptr;
         mJoinPolicy = other.mJoinPolicy;
-
         mAgents.clear();
         mCoalitions.clear();
 
@@ -131,6 +128,7 @@ Party& Party::operator=(const Party& other)
         mMandates = other.mMandates;
         mJoinPolicy = other.mJoinPolicy;
         mState = other.mState;
+        mTimer = other.mTimer;
         return *this;
     }
 }
