@@ -79,7 +79,7 @@ Agent::~Agent()
 
 //---------------- copy constructor-------------//
 Agent::Agent(const Agent &other) : mAgentId(other.mAgentId), mPartyId(other.mPartyId),
- mSelectionPolicy(other.mSelectionPolicy), mParties(), mCoalitionId(other.mCoalitionId)
+ mSelectionPolicy(other.mSelectionPolicy->clone()), mParties(), mCoalitionId(other.mCoalitionId)
 {
     for (int party: other.mParties)
     {
@@ -95,9 +95,9 @@ Agent &Agent::operator=(const Agent &other)
     {
         delete mSelectionPolicy;
         mSelectionPolicy = nullptr;
-        mSelectionPolicy = other.mSelectionPolicy;
+        mSelectionPolicy = other.mSelectionPolicy->clone();
+        
         mParties.clear();
-
         for (int party: other.mParties)
         {
             mParties.push_back(party);
@@ -105,7 +105,6 @@ Agent &Agent::operator=(const Agent &other)
 
         mAgentId = other.mAgentId;
         mPartyId = other.mPartyId;
-        mSelectionPolicy = other.mSelectionPolicy;
         mCoalitionId = other.mCoalitionId;
         return *this;
     }
@@ -113,7 +112,7 @@ Agent &Agent::operator=(const Agent &other)
 
 //-----------------move constructor-----------//
 Agent::Agent(Agent &&other): mAgentId(other.mAgentId), mPartyId(other.mPartyId),
- mSelectionPolicy(other.mSelectionPolicy), mParties(), mCoalitionId(other.mCoalitionId)
+ mSelectionPolicy(other.mSelectionPolicy->clone()), mParties(), mCoalitionId(other.mCoalitionId)
 {
     for (int party: other.mParties)
     {
@@ -139,7 +138,7 @@ Agent &Agent::operator=(Agent &&other)
     
         mAgentId = other.mAgentId;
         mPartyId = other.mPartyId;
-        mSelectionPolicy = other.mSelectionPolicy;
+        mSelectionPolicy = other.mSelectionPolicy->clone();
         mCoalitionId = other.mCoalitionId;
         return *this;
     }

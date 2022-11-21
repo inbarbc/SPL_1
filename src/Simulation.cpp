@@ -32,7 +32,6 @@ void Simulation::step()
 
     for (Agent &agent : mAgents)
     {
-        //if (!agent.getParties().empty()) {agent.step(*this);}
         agent.step(*this);
     }
 }

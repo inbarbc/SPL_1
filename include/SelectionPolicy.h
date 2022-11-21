@@ -12,21 +12,21 @@ class SelectionPolicy
 public:
     virtual void select(Graph &graph, Agent &agent, vector<int> &parties) = 0;
     virtual SelectionPolicy* clone() const = 0;
-    virtual ~ SelectionPolicy();
+    virtual ~ SelectionPolicy()  = default;
 };
 
 class MandatesSelectionPolicy: public SelectionPolicy
 { 
 public:
-    void select(Graph &graph, Agent &agent, vector<int> &parties);
-    virtual MandatesSelectionPolicy* clone() const override;
-    virtual ~ MandatesSelectionPolicy();
+    void select(Graph &graph, Agent &agent, vector<int> &parties) override;
+    virtual SelectionPolicy* clone() const override;
+    virtual ~MandatesSelectionPolicy() override = default;
 };
 
 class EdgeWeightSelectionPolicy: public SelectionPolicy
 {
 public:
     void select(Graph &graph, Agent &agent, vector<int> &parties);
-    virtual EdgeWeightSelectionPolicy* clone() const override;
-    virtual ~ EdgeWeightSelectionPolicy();
+    virtual SelectionPolicy* clone() const override;
+    virtual ~EdgeWeightSelectionPolicy() override = default;
 };

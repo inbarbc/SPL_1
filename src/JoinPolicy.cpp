@@ -2,9 +2,15 @@
 #include "Agent.h"
 #include "Graph.h"
 
-JoinPolicy::~JoinPolicy(){}
-MandatesJoinPolicy::~MandatesJoinPolicy(){};
-LastOfferJoinPolicy::~LastOfferJoinPolicy(){};
+JoinPolicy* MandatesJoinPolicy::clone() const
+{
+    return new MandatesJoinPolicy();
+}
+
+JoinPolicy* LastOfferJoinPolicy::clone() const
+{
+    return new LastOfferJoinPolicy();
+}
 
 void MandatesJoinPolicy::join(Party &party, Simulation &simulation)
 {

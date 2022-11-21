@@ -1,17 +1,13 @@
 #include "../include/SelectionPolicy.h"
 
-SelectionPolicy::~SelectionPolicy(){}
-MandatesSelectionPolicy::~MandatesSelectionPolicy(){};
-EdgeWeightSelectionPolicy::~EdgeWeightSelectionPolicy(){};
-
-MandatesSelectionPolicy* MandatesSelectionPolicy::clone() const
+SelectionPolicy* MandatesSelectionPolicy::clone() const
 {
-    return new MandatesSelectionPolicy(*this);
+    return new MandatesSelectionPolicy();
 }
 
-EdgeWeightSelectionPolicy* EdgeWeightSelectionPolicy::clone() const
+SelectionPolicy* EdgeWeightSelectionPolicy::clone() const
 {
-    return new EdgeWeightSelectionPolicy(*this);
+    return new EdgeWeightSelectionPolicy();
 }
 
 void MandatesSelectionPolicy::select(Graph &graph, Agent &agent, vector<int> &parties)

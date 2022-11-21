@@ -84,7 +84,7 @@ Party::~Party()
 
 //---------------- copy constructor-------------//
 Party::Party(const Party &other) : mId(other.mId), mName(other.mName),
- mMandates(other.mMandates), mJoinPolicy(other.mJoinPolicy), mState(other.mState),
+ mMandates(other.mMandates), mJoinPolicy(other.mJoinPolicy->clone()), mState(other.mState),
   mTimer(other.mTimer), mAgents(), mCoalitions(), mLoadingCoalitionsVector()
 {
     for (int agent: other.mAgents)
@@ -106,7 +106,8 @@ Party &Party::operator=(const Party &other)
     {
         delete mJoinPolicy;
         mJoinPolicy = nullptr;
-        mJoinPolicy = other.mJoinPolicy;
+        mJoinPolicy = other.mJoinPolicy->clone();
+        
         mAgents.clear();
         mCoalitions.clear();
 
@@ -123,7 +124,7 @@ Party &Party::operator=(const Party &other)
         mId = other.mId;
         mName = other.mName;
         mMandates = other.mMandates;
-        mJoinPolicy = other.mJoinPolicy;
+        mJoinPolicy = other.mJoinPolicy->clone();
         mState = other.mState;
         mTimer = other.mTimer;
         return *this;
@@ -132,7 +133,7 @@ Party &Party::operator=(const Party &other)
 
 //-----------------move constructor-----------//
 Party::Party(Party &&other) : mId(other.mId), mName(other.mName),
- mMandates(other.mMandates), mJoinPolicy(other.mJoinPolicy), mState(other.mState),
+ mMandates(other.mMandates), mJoinPolicy(other.mJoinPolicy->clone()), mState(other.mState),
   mTimer(other.mTimer), mAgents(), mCoalitions(), mLoadingCoalitionsVector()
 {
     for (int agent: other.mAgents)
@@ -171,7 +172,7 @@ Party& Party::operator=(Party&& other)
     mId = other.mId;
     mName = other.mName;
     mMandates = other.mMandates;
-    mJoinPolicy = other.mJoinPolicy;
+    mJoinPolicy = other.mJoinPolicy->clone();
     mState = other.mState;
     return *this;
 }
