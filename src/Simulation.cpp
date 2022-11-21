@@ -44,16 +44,16 @@ void Simulation::step()
 
 bool Simulation::shouldTerminate() const
 {   
-    for (int i = 0; i < mGraph.getNumVertices(); i++)
-    {
-        if (mGraph.getParty(i).getState() != Joined) {return false;}
-    }
-
     for (const int coalition : mCoalitions)
     {
         if (coalition >= 61) {return true;}
     }
 
+    for (int i = 0; i < mGraph.getNumVertices(); i++)
+    {
+        if (mGraph.getParty(i).getState() != Joined) {return false;}
+    }
+    
     return true;
 }
 
@@ -78,16 +78,19 @@ const vector<vector<int>> Simulation::getPartiesByCoalitions() const
 {
     vector<vector<int>> coalitions;
 
-    for (int i : mCoalitions)
+    for (int i = 0; i < mIndex; i++)
     {
-        vector<int> parties;
+        vector<int> coalition;
 
         for (const Agent &agent : mAgents)
         {
-            if (agent.getCoalitionId() == i) {parties.push_back(agent.getPartyId());}
+            if (agent.getCoalitionId() == i)
+            {
+                coalition.push_back(agent.getPartyId());
+            }
         }
         
-        coalitions.push_back(parties);
+        coalitions.push_back(coalition);
     }
 
     return coalitions;

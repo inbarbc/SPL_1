@@ -22,13 +22,13 @@ public:
     const int getCoalitionId() const;
     void setCoalitionId(int coalitionId);
 
-    Agent(const Agent &other,int agentId,int partyId); // deep copy
-
     virtual ~Agent(); //destructor
     Agent(const Agent &other); //copy constructor
     Agent &operator=(const Agent &other); //copy assignment operator
     Agent(Agent &&other); //move constructor
     Agent &operator=(Agent &&other); //move assignment operator
+
+    Agent(const Agent &other,int agentId,int partyId); // another copy constructor
 
 private:
     int mAgentId;

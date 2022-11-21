@@ -83,6 +83,7 @@ Agent::~Agent()
 }
 
 //---------------- copy constructor-------------//
+// It is called when a new object is created from an existing object, as a copy of the existing object.
 Agent::Agent(const Agent &other) : mAgentId(other.mAgentId), mPartyId(other.mPartyId),
  mSelectionPolicy(other.mSelectionPolicy->clone()), mParties(), mCoalitionId(other.mCoalitionId)
 {
@@ -93,11 +94,15 @@ Agent::Agent(const Agent &other) : mAgentId(other.mAgentId), mPartyId(other.mPar
 }
 
 //-------------copy assignment operator------------//
+// This operator is called when an already initialized object is assigned a new value from another existing object. 
 Agent &Agent::operator=(const Agent &other)
 {
     if(this == &other) {return *this;}
     else
     {
+        mAgentId = other.mAgentId;
+        mPartyId = other.mPartyId;
+
         delete mSelectionPolicy;
         mSelectionPolicy = nullptr;
         mSelectionPolicy = other.mSelectionPolicy->clone();
@@ -108,14 +113,13 @@ Agent &Agent::operator=(const Agent &other)
             mParties.push_back(party);
         }  
 
-        mAgentId = other.mAgentId;
-        mPartyId = other.mPartyId;
         mCoalitionId = other.mCoalitionId;
         return *this;
     }
 }
 
 //-----------------move constructor-----------//
+// a move constructor is called on an object created by the operation.
 Agent::Agent(Agent &&other): mAgentId(other.mAgentId), mPartyId(other.mPartyId),
  mSelectionPolicy(other.mSelectionPolicy->clone()), mParties(), mCoalitionId(other.mCoalitionId)
 {
@@ -126,24 +130,25 @@ Agent::Agent(Agent &&other): mAgentId(other.mAgentId), mPartyId(other.mPartyId),
 }
 
 //------------- move assignment operator ---------//
+// a move assignment operator is called on an existing object.
 Agent &Agent::operator=(Agent &&other)
 {
     if(this == &other) {return *this;}
     else
     {
+        mAgentId = other.mAgentId;
+        mPartyId = other.mPartyId;
+
         delete mSelectionPolicy;
         other.mSelectionPolicy = nullptr;
+        mSelectionPolicy = other.mSelectionPolicy->clone();
 
         mParties.clear();
-
         for (int party: other.mParties)
         {
             mParties.push_back(party);
         }    
-    
-        mAgentId = other.mAgentId;
-        mPartyId = other.mPartyId;
-        mSelectionPolicy = other.mSelectionPolicy->clone();
+
         mCoalitionId = other.mCoalitionId;
         return *this;
     }

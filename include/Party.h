@@ -49,5 +49,5 @@ private:
     int mTimer; // init in party class
     vector<int> mAgents; // init in party class
     vector<bool> mCoalitions; // init in party class
-    bool mLoadingCoalitionsVector;
+    bool mLoadingCoalitionsVector; // init in party class - step function
 };

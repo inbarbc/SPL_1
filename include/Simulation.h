@@ -31,5 +31,5 @@ private:
     vector<Agent> mAgents;
 
     vector<int> mCoalitions; // init in simulation class
-    int mIndex;
+    int mIndex; // init in simulation class
 };

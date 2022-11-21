@@ -4,7 +4,7 @@
 
 Party::Party(int id, string name, int mandates, JoinPolicy *jp) : mId(id), mName(name),
  mMandates(mandates), mJoinPolicy(jp), mState(Waiting),
-mTimer(0), mAgents(), mCoalitions(0), mLoadingCoalitionsVector(false)
+mTimer(0), mAgents(0), mCoalitions(0), mLoadingCoalitionsVector(false)
 {
 
 }
@@ -82,13 +82,16 @@ Party::~Party()
         delete mJoinPolicy;
         mJoinPolicy = nullptr;
     }
+
+    mAgents.clear();
     mCoalitions.clear();
 }
 
 //---------------- copy constructor-------------//
+// It is called when a new object is created from an existing object, as a copy of the existing object.
 Party::Party(const Party &other) : mId(other.mId), mName(other.mName),
  mMandates(other.mMandates), mJoinPolicy(other.mJoinPolicy->clone()), mState(other.mState),
-  mTimer(other.mTimer), mAgents(), mCoalitions(), mLoadingCoalitionsVector()
+  mTimer(other.mTimer), mAgents(), mCoalitions(), mLoadingCoalitionsVector(other.mLoadingCoalitionsVector)
 {
     for (int agent: other.mAgents)
     {
@@ -102,42 +105,44 @@ Party::Party(const Party &other) : mId(other.mId), mName(other.mName),
 }
 
 //-------------copy assignment operator------------//
+// This operator is called when an already initialized object is assigned a new value from another existing object. 
 Party &Party::operator=(const Party &other)
 {
     if(this == &other) {return *this;}
     else
     {
+        mId = other.mId;
+        mName = other.mName;
+        mMandates = other.mMandates;
+
         delete mJoinPolicy;
         mJoinPolicy = nullptr;
         mJoinPolicy = other.mJoinPolicy->clone();
+
+        mState = other.mState;
+        mTimer = other.mTimer;
         
         mAgents.clear();
-        mCoalitions.clear();
-
         for (int agent: other.mAgents)
         {
             mAgents.push_back(agent);
         }
 
+        mCoalitions.clear();
         for (bool coatiltion: other.mCoalitions)
         {
             mCoalitions.push_back(coatiltion);
         }   
 
-        mId = other.mId;
-        mName = other.mName;
-        mMandates = other.mMandates;
-        mJoinPolicy = other.mJoinPolicy->clone();
-        mState = other.mState;
-        mTimer = other.mTimer;
         return *this;
     }
 }
 
 //-----------------move constructor-----------//
+// a move constructor is called on an object created by the operation.
 Party::Party(Party &&other) : mId(other.mId), mName(other.mName),
  mMandates(other.mMandates), mJoinPolicy(other.mJoinPolicy->clone()), mState(other.mState),
-  mTimer(other.mTimer), mAgents(), mCoalitions(), mLoadingCoalitionsVector()
+  mTimer(other.mTimer), mAgents(), mCoalitions(), mLoadingCoalitionsVector(other.mLoadingCoalitionsVector)
 {
     for (int agent: other.mAgents)
     {
@@ -151,32 +156,36 @@ Party::Party(Party &&other) : mId(other.mId), mName(other.mName),
 }
 
 //------------- move assignment operator ---------//
-Party& Party::operator=(Party&& other)
+// a move assignment operator is called on an existing object.
+Party& Party::operator=(Party &&other)
 {
-    if(this == &other)
+    if(this == &other) {return *this;}
+    else
     {
+        mId = other.mId;
+        mName = other.mName;
+        mMandates = other.mMandates;
+
+        delete mJoinPolicy;
+        mJoinPolicy = nullptr;
+        mJoinPolicy = other.mJoinPolicy->clone();
+
+        mState = other.mState;
+        mTimer = other.mTimer;
+        
+        mAgents.clear();
+        for (int agent: other.mAgents)
+        {
+            mAgents.push_back(agent);
+        }
+
+        mCoalitions.clear();
+        for (bool coatiltion: other.mCoalitions)
+        {
+            mCoalitions.push_back(coatiltion);
+        }   
+
         return *this;
     }
-
-    delete mJoinPolicy;
-    mAgents.clear();
-    mCoalitions.clear();
-
-    for (int agent: other.mAgents)
-    {
-        mAgents.push_back(agent);
-    }
-
-    for (bool coatiltion: other.mCoalitions)
-    {
-        mCoalitions.push_back(coatiltion);
-    }
-    
-    mId = other.mId;
-    mName = other.mName;
-    mMandates = other.mMandates;
-    mJoinPolicy = other.mJoinPolicy->clone();
-    mState = other.mState;
-    return *this;
 }
 
