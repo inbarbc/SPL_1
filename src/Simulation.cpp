@@ -1,9 +1,10 @@
 #include "Simulation.h"
 
-Simulation::Simulation(Graph graph, vector<Agent> agents) : mGraph(graph), mAgents(agents), mCoalitions(0)
-{
-    int i = 0;
+#include <iostream>
+using namespace std;
 
+Simulation::Simulation(Graph graph, vector<Agent> agents) : mGraph(graph), mAgents(agents), mCoalitions(0), mIndex(0)
+{
     for (Agent &agent : mAgents)
     {
 
@@ -18,9 +19,14 @@ Simulation::Simulation(Graph graph, vector<Agent> agents) : mGraph(graph), mAgen
             }
         }
 
-        agent.setCoalitionId(i); i++;
+        agent.setCoalitionId(mIndex); mIndex++;
         mCoalitions.push_back(mGraph.getMandates(agent.getPartyId()));
     }   
+}
+
+const int Simulation::getIndex() const
+{
+    return mIndex;
 }
 
 void Simulation::step()
@@ -38,9 +44,7 @@ void Simulation::step()
 
 bool Simulation::shouldTerminate() const
 {   
-    if ((!collectingOffersParties()) & (!activeAgents())) {return true;}
-
-    for (int i = 0; i <= mGraph.getNumVertices(); i++)
+    for (int i = 0; i < mGraph.getNumVertices(); i++)
     {
         if (mGraph.getParty(i).getState() != Joined) {return false;}
     }
@@ -51,24 +55,6 @@ bool Simulation::shouldTerminate() const
     }
 
     return true;
-}
-
-const bool Simulation::collectingOffersParties() const
-{
-    for (int i = 0; i <= mGraph.getNumVertices(); i++)
-    {
-        if (mGraph.getParty(i).getState() == CollectingOffers) {return true;}
-    }
-    return false;
-}
-
-const bool Simulation::activeAgents() const
-{
-    for (const Agent agent : mAgents)
-    {
-        if (!agent.getParties().empty()) {return true;}
-    }
-    return false;
 }
 
 const Graph &Simulation::getGraph() const

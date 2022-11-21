@@ -65,7 +65,7 @@ Agent::Agent(const Agent &other,int agentId,int partyId) : mAgentId(other.mAgent
 
 void Agent::step(Simulation &sim)
 {   
-    (*mSelectionPolicy).select(sim.getGraph(),*this,mParties);
+    if (!mParties.empty()) {(*mSelectionPolicy).select(sim.getGraph(),*this,mParties);}
 }
 
 ///------------Rule of 5-------------///
@@ -73,8 +73,13 @@ void Agent::step(Simulation &sim)
 //--------Destructor--------//
 Agent::~Agent()
 {
-    //delete mSelectionPolicy;
-    //mParties.clear();
+    if (mSelectionPolicy)
+    {
+        delete mSelectionPolicy;
+        mSelectionPolicy = nullptr;
+    }
+
+    mParties.clear();
 }
 
 //---------------- copy constructor-------------//

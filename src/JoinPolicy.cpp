@@ -23,7 +23,7 @@ void MandatesJoinPolicy::join(Party &party, Simulation &simulation)
         if (simulation.getCoalitions()[(*mSelectedAgent).getCoalitionId()] > m)
         {
             m = simulation.getCoalitions()[(*mSelectedAgent).getCoalitionId()];
-            mSelectedAgent = &simulation.getAgents()[party.getAgents()[agent]];
+            mSelectedAgent = &simulation.getAgents()[agent];
         }
     }
 

@@ -24,12 +24,12 @@ public:
     vector<int> &getCoalitions();
     void addAgent(Agent &agent);
     vector<Agent> &getAgents();
-    const bool collectingOffersParties() const;
-    const bool activeAgents() const;
+    const int getIndex() const;
 
 private:
     Graph mGraph;
     vector<Agent> mAgents;
 
     vector<int> mCoalitions; // init in simulation class
+    int mIndex;
 };

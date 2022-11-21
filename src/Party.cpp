@@ -4,7 +4,7 @@
 
 Party::Party(int id, string name, int mandates, JoinPolicy *jp) : mId(id), mName(name),
  mMandates(mandates), mJoinPolicy(jp), mState(Waiting),
-mTimer(-1), mAgents(0), mCoalitions(0), mLoadingCoalitionsVector(false)
+mTimer(0), mAgents(), mCoalitions(0), mLoadingCoalitionsVector(false)
 {
 
 }
@@ -58,7 +58,7 @@ void Party::step(Simulation &s)
 {   
     if (!mLoadingCoalitionsVector)
     {
-        for (int i = 0; i < s.getGraph().getNumVertices(); i++)
+        for (int i = 0; i <= s.getIndex(); i++)
         {
             mCoalitions.push_back(false);
         }
@@ -77,9 +77,12 @@ void Party::step(Simulation &s)
 //--------Destructor--------//
 Party::~Party()
 {
-    //delete mJoinPolicy;
-    //mAgents.clear();
-    //mCoalitions.clear();
+    if (mJoinPolicy)
+    {
+        delete mJoinPolicy;
+        mJoinPolicy = nullptr;
+    }
+    mCoalitions.clear();
 }
 
 //---------------- copy constructor-------------//
