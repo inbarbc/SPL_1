@@ -21,19 +21,20 @@ public:
     void removeParty(int partyId);
     const int getCoalitionId() const;
     void setCoalitionId(int coalitionId);
-    void setAgentId(int agentId);
 
-    virtual ~ Agent(); //destructor
+    Agent(const Agent &other,int agentId,int partyId); // deep copy
+
+    virtual ~Agent(); //destructor
     Agent(const Agent &other); //copy constructor
     Agent &operator=(const Agent &other); //copy assignment operator
     Agent(Agent &&other); //move constructor
-    Agent &operator=(Agent && other); //move assignment operator
+    Agent &operator=(Agent &&other); //move assignment operator
 
 private:
     int mAgentId;
     int mPartyId;
     SelectionPolicy *mSelectionPolicy;
 
-    vector<int> mParties;
-    int mCoalitionId;
+    vector<int> mParties; // init in simulation class
+    int mCoalitionId; // init in simulation class
 };

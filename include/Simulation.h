@@ -23,12 +23,13 @@ public:
     Graph &getGraph();
     vector<int> &getCoalitions();
     void addAgent(Agent &agent);
-    void removeAgent(Agent &agent);
     vector<Agent> &getAgents();
+    const bool collectingOffersParties() const;
+    const bool activeAgents() const;
 
 private:
     Graph mGraph;
     vector<Agent> mAgents;
 
-    vector<int> mCoalitions;
+    vector<int> mCoalitions; // init in simulation class
 };

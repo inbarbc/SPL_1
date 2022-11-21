@@ -1,43 +1,46 @@
 #include "Simulation.h"
 
-Simulation::Simulation(Graph graph, vector<Agent> agents) : mGraph(graph), mAgents(agents) , mCoalitions(0)
+Simulation::Simulation(Graph graph, vector<Agent> agents) : mGraph(graph), mAgents(agents), mCoalitions(0)
 {
-    vector<int> coalitions;
     int i = 0;
 
     for (Agent &agent : mAgents)
     {
-        agent.setCoalitionId(i); i++;
 
-        for (int j = 0; j <= mGraph.getNumVertices(); j++)
+        for (int j = 0; j < mGraph.getNumVertices(); j++)
         {
-            if (mGraph.getEdgeWeight(agent.getId(),j) > 0)
+            if (mGraph.getEdgeWeight(agent.getPartyId(),j) > 0)
             {
-                if (mGraph.getParty(j).getState() != Joined) 
+                if (mGraph.getParty(j).getState() != Joined)
                 {
-                    agent.addParty(mGraph.getParty(j).getId());
+                    agent.addParty(j); // partyId = partyIndex
                 }
             }
         }
-        coalitions.push_back(mGraph.getMandates(agent.getPartyId()));
+
+        agent.setCoalitionId(i); i++;
+        mCoalitions.push_back(mGraph.getMandates(agent.getPartyId()));
     }   
 }
 
 void Simulation::step()
 {
-    for (int i = 0; i <= mGraph.getNumVertices(); i++)
+    for (int i = 0; i < mGraph.getNumVertices(); i++)
     {
         mGraph.getParty(i).step(*this);
     }
 
     for (Agent &agent : mAgents)
     {
+        //if (!agent.getParties().empty()) {agent.step(*this);}
         agent.step(*this);
     }
 }
 
 bool Simulation::shouldTerminate() const
 {   
+    if ((!collectingOffersParties()) & (!activeAgents())) {return true;}
+
     for (int i = 0; i <= mGraph.getNumVertices(); i++)
     {
         if (mGraph.getParty(i).getState() != Joined) {return false;}
@@ -49,6 +52,24 @@ bool Simulation::shouldTerminate() const
     }
 
     return true;
+}
+
+const bool Simulation::collectingOffersParties() const
+{
+    for (int i = 0; i <= mGraph.getNumVertices(); i++)
+    {
+        if (mGraph.getParty(i).getState() == CollectingOffers) {return true;}
+    }
+    return false;
+}
+
+const bool Simulation::activeAgents() const
+{
+    for (const Agent agent : mAgents)
+    {
+        if (!agent.getParties().empty()) {return true;}
+    }
+    return false;
 }
 
 const Graph &Simulation::getGraph() const
@@ -70,8 +91,21 @@ const Party &Simulation::getParty(int partyId) const
 /// At the simulation initialization - the result will be [[agent0.partyId], [agent1.partyId], ...]
 const vector<vector<int>> Simulation::getPartiesByCoalitions() const
 {
-    // TODO: you MUST implement this method for getting proper output, read the documentation above.
-    return vector<vector<int>>();
+    vector<vector<int>> coalitions;
+
+    for (int i : mCoalitions)
+    {
+        vector<int> parties;
+
+        for (const Agent &agent : mAgents)
+        {
+            if (agent.getCoalitionId() == i) {parties.push_back(agent.getPartyId());}
+        }
+        
+        coalitions.push_back(parties);
+    }
+
+    return coalitions;
 }
 
 Graph &Simulation::getGraph()
@@ -87,21 +121,6 @@ vector<int> &Simulation::getCoalitions()
 void Simulation::addAgent(Agent &agent)
 {
     mAgents.push_back(agent);
-}
-
-void Simulation::removeAgent(Agent &agent)
-{
-    int i = 0;
-
-    for (Agent &a : mAgents)
-    {
-        if (a.getId() == agent.getId())
-        {
-            mAgents.erase(mAgents.begin() + i);
-            break;
-        }
-        else {i++;}
-    }
 }
 
 vector<Agent> &Simulation::getAgents()

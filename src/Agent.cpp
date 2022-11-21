@@ -1,9 +1,11 @@
 #include "Agent.h"
-#include "SelectionPolicy.h"
 #include "Simulation.h"
+#include "SelectionPolicy.h"
 
-Agent::Agent(int agentId, int partyId, SelectionPolicy *selectionPolicy) : mAgentId(agentId), mPartyId(partyId), mSelectionPolicy(selectionPolicy), mParties(0), mCoalitionId()
+Agent::Agent(int agentId, int partyId, SelectionPolicy *selectionPolicy) : mAgentId(agentId), mPartyId(partyId),
+ mSelectionPolicy(selectionPolicy), mParties(0), mCoalitionId(-1)
 {
+
 }
 
 int Agent::getId() const
@@ -51,15 +53,19 @@ void Agent::setCoalitionId(int coalitionId)
     mCoalitionId = coalitionId;
 }
 
-void Agent::setAgentId(int agentId)
+Agent::Agent(const Agent &other,int agentId,int partyId) : mAgentId(other.mAgentId), mPartyId(other.mPartyId),
+ mSelectionPolicy(other.mSelectionPolicy), mParties(), mCoalitionId(other.mCoalitionId)
 {
     mAgentId = agentId;
+    mPartyId = partyId;
+    mSelectionPolicy = other.mSelectionPolicy->clone();
+    mParties.clear();
+    mCoalitionId = other.mCoalitionId;
 }
 
 void Agent::step(Simulation &sim)
 {   
     (*mSelectionPolicy).select(sim.getGraph(),*this,mParties);
-    if (mParties.empty()) {sim.removeAgent(*this);}
 }
 
 ///------------Rule of 5-------------///
@@ -67,12 +73,13 @@ void Agent::step(Simulation &sim)
 //--------Destructor--------//
 Agent::~Agent()
 {
-    delete mSelectionPolicy;
-    mParties.clear();
+    //delete mSelectionPolicy;
+    //mParties.clear();
 }
 
 //---------------- copy constructor-------------//
-Agent::Agent(const Agent &other) : mAgentId(other.mAgentId), mPartyId(other.mPartyId), mSelectionPolicy(other.mSelectionPolicy), mParties(), mCoalitionId(other.mCoalitionId)
+Agent::Agent(const Agent &other) : mAgentId(other.mAgentId), mPartyId(other.mPartyId),
+ mSelectionPolicy(other.mSelectionPolicy), mParties(), mCoalitionId(other.mCoalitionId)
 {
     for (int party: other.mParties)
     {
@@ -105,7 +112,8 @@ Agent &Agent::operator=(const Agent &other)
 }
 
 //-----------------move constructor-----------//
-Agent::Agent(Agent &&other): mAgentId(other.mAgentId), mPartyId(other.mPartyId), mSelectionPolicy(other.mSelectionPolicy), mParties(), mCoalitionId(other.mCoalitionId)
+Agent::Agent(Agent &&other): mAgentId(other.mAgentId), mPartyId(other.mPartyId),
+ mSelectionPolicy(other.mSelectionPolicy), mParties(), mCoalitionId(other.mCoalitionId)
 {
     for (int party: other.mParties)
     {

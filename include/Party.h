@@ -46,7 +46,8 @@ private:
     JoinPolicy *mJoinPolicy;
     State mState;
 
-    int mTimer;
-    vector<int> mAgents;
-    vector<bool> mCoalitions;
+    int mTimer; // init in party class
+    vector<int> mAgents; // init in party class
+    vector<bool> mCoalitions; // init in party class
+    bool mLoadingCoalitionsVector;
 };
