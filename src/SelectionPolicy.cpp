@@ -10,6 +10,7 @@ SelectionPolicy* EdgeWeightSelectionPolicy::clone() const
     return new EdgeWeightSelectionPolicy();
 }
 
+// If the maximum mandates/edge weight is not unique, take the first party (with the lower id).
 void MandatesSelectionPolicy::select(Graph &graph, Agent &agent, vector<int> &parties)
 {
     // select party
@@ -41,10 +42,11 @@ void MandatesSelectionPolicy::select(Graph &graph, Agent &agent, vector<int> &pa
     mSelectedParty->offerMarking(agent.getCoalitionId());
 }
 
+// If the maximum mandates/edge weight is not unique, take the first party (with the lower id).
 void EdgeWeightSelectionPolicy::select(Graph &graph, Agent &agent, vector<int> &parties)
 {
     // select party
-    int m = 0;
+    int w = 0;
     Party *mSelectedParty;
 
     for (int party : parties)
@@ -52,9 +54,9 @@ void EdgeWeightSelectionPolicy::select(Graph &graph, Agent &agent, vector<int> &
         Party &p = graph.getParty(party);
         if (!p.offerChecking(agent.getCoalitionId()))
         {
-            if (graph.getEdgeWeight(agent.getPartyId(),party) > m)
+            if (graph.getEdgeWeight(agent.getPartyId(),party) > w)
             {
-                m = graph.getEdgeWeight(agent.getPartyId(),party);
+                w = graph.getEdgeWeight(agent.getPartyId(),party);
                 mSelectedParty = &p;
             }
         }
